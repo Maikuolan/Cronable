@@ -1,0 +1,13 @@
+{
+    "name": "maikuolan/cronable",
+    "description": "Cronable is a simple script that allows auto-updating CIDRAM and phpMussel via cronjobs.",
+    "keywords": ["cron","cronjobs","cronable","cidram","phpmussel","php","auto-update","update","updating"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/Maikuolan/Cronable/issues",
+        "source": "https://github.com/Maikuolan/Cronable"
+    },
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
