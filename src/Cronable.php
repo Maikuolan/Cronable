@@ -2,9 +2,10 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v0.0.1-ALPHA (last modified: 2017.10.29).
+ * Cronable v1.0.0 (last modified: 2017.10.29).
  *
- * Description: Allows auto-updating CIDRAM and phpMussel via cronjobs.
+ * Description: Cronable is a simple script that allows auto-updating CIDRAM
+ * and phpMussel via cronjobs.
  *
  * CRONABLE COPYRIGHT 2017 and beyond by Caleb Mazalevskis (Maikuolan).
  *
@@ -16,7 +17,7 @@ class Cronable
 {
 
     /** Cronable user agent. */
-    private $ScriptUA = 'Cronable v0.0.1-ALPHA';
+    private $ScriptUA = 'Cronable v1.0.0';
 
     /** Default timeout. */
     private $Timeout = 12;

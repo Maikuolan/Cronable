@@ -2,19 +2,29 @@
 
 Cronable is a simple script that allows auto-updating CIDRAM and phpMussel via cronjobs.
 
-*THIS IS NOT YET PRODUCTION READY!*
+*Cronable isn't compatible with all versions of the packages that it's associated with. For compatibility information (to know which versions of the packages that it's associated with that it can update from), please refer to the [Compatibility Charts](https://maikuolan.github.io/Compatibility-Charts/).*
 
 ---
 
 ### How to install:
 
-@todo@
+You can download the file containing the class, [Cronable.php](src/Cronable.php), directly from this repository, or, if you'd prefer, you can install it using Composer:
+
+`composer require maikuolan/cronable`
+
+Cronable is a stand-alone class that has no dependencies other than PHP, the cURL extension of PHP, and something to trigger it at the desired interval (generally, a cron manager of some description), and so, downloading it is all there really is to "installing" it.
 
 ---
 
 ### How to use:
 
-@todo@
+For auto-updating CIDRAM or phpMussel with Cronable, front-end management will need to be enabled. Create a new account from the accounts page for Cronable to use, and set the permissions for this new account to "Cronable" (the "Cronable" permissions type is intended only for Cronable, and shouldn't be used for anything else). Take note of the username and password that you choose for this new account, because you'll need it in a moment.
+
+Next, check the [examples.php](examples.php) file, and using the instructions and examples given in the file, create your update tasks as per necessary.
+
+Using your cron manager or other triggering mechanism, create a new cron task with the desired update interval (please don't choose an excessively short interval, as the inbound requests received by the servers containing the updates may perceive this as abuse, and you may blocked by them as a consequence; checking for updates once a day should be more than enough; most updates tend to be released once per week or once per month anyhow), pointing to the file containing your Cronable update tasks.
+
+That's everything. :-)
 
 ---
 
