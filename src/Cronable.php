@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.0.0 (last modified: 2017.10.29).
+ * Cronable v1.1.0 (last modified: 2017.11.05).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -17,7 +17,7 @@ class Cronable
 {
 
     /** Cronable user agent. */
-    private $ScriptUA = 'Cronable v1.0.0';
+    private $ScriptUA = 'Cronable v1.1.0';
 
     /** Default timeout. */
     private $Timeout = 12;
@@ -77,7 +77,7 @@ class Cronable
         /** Return the results of the request. */
         return $Response;
     }
-    
+
     /** Update method. */
     private function update($Arr)
     {
@@ -106,19 +106,17 @@ class Cronable
         $Request = $this->request($Location, http_build_query($Arr));
         if (substr($Request, 0, 1) == '{' && substr($Request, -1) == '}') {
             $Request = json_decode($Request, true, 3);
-            if (empty($Request)) {
-                return false;
-            }
             if (!empty($Request['state_msg'])) {
                 return $Request['state_msg'];
             }
-            if (!empty($Request['outdated'])) {
-                $Arr['ID'] = $Request['outdated'];
-                $Arr['do'] = 'update-component';
-                $Request = $this->request($Location, http_build_query($Arr));
-            } else {
+            if (empty($Request['outdated'])) {
                 return false;
             }
+            $Arr['ID'] = $Request['outdated'];
+            $Arr['do'] = 'update-component';
+            $Request = $this->request($Location, http_build_query($Arr));
+        } elseif (!empty($Request)) {
+            return false;
         }
         if (substr($Request, 0, 1) == '{' && substr($Request, -1) == '}') {
             $Request = json_decode($Request, true, 3);
@@ -131,30 +129,37 @@ class Cronable
         }
         return true;
     }
-    
+
+    /** Build identifier. */
+    private function buildIdentifier($Package, $Location)
+    {
+        $Location = preg_replace('~^(?:http\:\/\/)?(?:www[0-9]{0,3}\.)?~i', '', $Location);
+        return '[' . $Package . '@' . $Location . ']';
+    }
+
     /** Create task method. */
     public function createTask($Package, $Username, $Password, $Location)
     {
         $this->Tasks[] = ['Package' => $Package, 'Username' => $Username, 'Password' => $Password, 'Location' => $Location];
     }
-    
+
     /** Execute all tasks. */
     public function execute()
     {
         $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
         $Tasks = $this->Tasks;
         foreach ($Tasks as $Task) {
-            $Identifier = empty($Task['Location']) ? '[Unknown]' : $Task['Location'];
+            $Identifier = empty($Task['Location']) ? '[Unknown]' : $this->buildIdentifier($Task['Package'], $Task['Location']);
             $Results = $this->update($Task);
             if ($Results === true) {
-                $this->Output .= 'Everything already up-to-date at "' . $Identifier . "\". :-)\n\n===\n";
+                $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
             } elseif ($Results === false) {
-                $this->Output .= 'An error occurred while attempting to update at "' . $Identifier . "\". :-(\n\n===\n";
+                $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
             } else {
-                $this->Output .= 'Status for "' . $Identifier . " is as follows:\n" . $Results . "\n\n===\n";
+                $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
             }
         }
-        $this->Output .= "\nTime: " . date('r') . "\n\n\n";
+        $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
     }
 
 }
