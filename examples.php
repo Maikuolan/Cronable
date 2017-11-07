@@ -11,7 +11,7 @@
  */
 
 /** Requiring the Cronable class file. */
-require __DIR__ . 'src/Cronable.php';
+require __DIR__ . '/src/Cronable.php';
 
 /** Importing the Cronable class from its namespace. */
 use \Maikuolan\Cronable\Cronable;

@@ -133,7 +133,7 @@ class Cronable
     /** Build identifier. */
     private function buildIdentifier($Package, $Location)
     {
-        $Location = preg_replace('~^(?:http\:\/\/)?(?:www[0-9]{0,3}\.)?~i', '', $Location);
+        $Location = preg_replace('~^(?:https?\:\/\/)?(?:www[0-9]{0,3}\.)?~i', '', $Location);
         return '[' . $Package . '@' . $Location . ']';
     }
 
