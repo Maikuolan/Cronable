@@ -172,6 +172,7 @@ class Cronable
         $_POST['CronMode'] = true;
         $_POST['username'] = $Username;
         $_POST['password'] = $Password;
+        $_SERVER['HTTP_USER_AGENT'] = $this->ScriptUA;
         if ($PackageKnown = ($Package === 'CIDRAM' || $Package === 'phpMussel')) {
             if ($Package === 'CIDRAM') {
                 $_SERVER['QUERY_STRING'] = 'cidram-page=updates';

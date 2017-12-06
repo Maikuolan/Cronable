@@ -19,30 +19,45 @@ use \Maikuolan\Cronable\Cronable;
 /** Instantiate a new object from the Cronable class. */
 $Cronable = new Cronable;
 
+/** ---------- Next, create your tasks, and then execute them, with... ---------- */
+
 /**
- * Create a task to update CIDRAM.
+ * Create a task to update CIDRAM or phpMussel.
  *
  * The createTask method accepts 4 parameters:
- * - The type of package to be updated (must always be "CIDRAM" for updating CIDRAM).
+ * - The type of package to be updated ('CIDRAM' or 'phpMussel').
  * - The username of the front-end account to be used by Cronable for updating the package.
  * - The password of the front-end account to be used by Cronable for updating the package.
  * - The location of the package loader file.
+ *
+ * Examples:
  */
 $Cronable->createTask('CIDRAM', 'username', 'password', 'http://foo.tld/cidram/loader.php');
+$Cronable->createTask('phpMussel', 'username', 'password', 'http://foo.tld/phpmussel/loader.php');
+
+/** After you've created your tasks, you'll want to execute them all. */
+$Cronable->execute();
+
+/** ---------- Alternatively, to update your package locally (Cronable >= v1.1.0)... ---------- */
 
 /**
- * Create a task to update phpMussel.
+ * For this, you don't need to separate methods (createTask, execute, etc).
+ * Everything is done in one operation. However, localUpdate doesn't support
+ * multiple tasks. If you use this, to update separate packages or to execute
+ * multiple tasks, you'll need to run multiple instances of Cronable.
  *
- * The createTask method accepts 4 parameters:
- * - The type of package to be updated (must always be "phpMussel" for updating phpMussel).
+ * The localUpdate method accepts 4 parameters:
+ * - The type of package to be updated ('CIDRAM' or 'phpMussel').
  * - The username of the front-end account to be used by Cronable for updating the package.
  * - The password of the front-end account to be used by Cronable for updating the package.
  * - The location of the package loader file.
+ *
+ * Examples:
  */
-$Cronable->createTask('phpMussel', 'username', 'password', 'http://foo.tld/phpmussel/loader.php');
+$Cronable->localUpdate('CIDRAM', 'username', 'password', '/public_html/cidram/loader.php');
+$Cronable->localUpdate('phpMussel', 'username', 'password', '/public_html/phpmussel/loader.php');
 
-/** Execute all tasks. */
-$Cronable->execute();
+/** ---------- Then finally: ---------- */
 
 /**
  * Print output for cron.
