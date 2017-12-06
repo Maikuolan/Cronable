@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.1.0 (last modified: 2017.11.05).
+ * Cronable v1.1.0 (last modified: 2017.12.06).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -158,6 +158,57 @@ class Cronable
             } else {
                 $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
             }
+        }
+        $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
+    }
+
+    /**
+     * Local update « ugly and blasphemous, I know, but Cronable wasn't originally intended to be used in this way, yet
+     * it has been requested, so tough it out (,,ﾟДﾟ) ».
+     */
+    public function localUpdate($Package, $Username, $Password, $Location)
+    {
+        /** Let's fake it all. */
+        $_POST['CronMode'] = true;
+        $_POST['username'] = $Username;
+        $_POST['password'] = $Password;
+        if ($PackageKnown = ($Package === 'CIDRAM' || $Package === 'phpMussel')) {
+            if ($Package === 'CIDRAM') {
+                $_SERVER['QUERY_STRING'] = 'cidram-page=updates';
+                $_POST['cidram-form-target'] = 'updates';
+            } elseif ($Package === 'phpMussel') {
+                $_SERVER['QUERY_STRING'] = 'phpmussel-page=updates';
+                $_POST['phpmussel-form-target'] = 'updates';
+            }
+        }
+        $UpdateAll = true;
+        if (empty($_SERVER['REMOTE_ADDR'])) {
+            $_SERVER['REMOTE_ADDR'] = '::1';
+        }
+
+        $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
+        $Identifier = empty($Location) ? '[Unknown]' : '[' . $Package . '@' . $Location . ']';
+        if (is_readable($Location) && $PackageKnown) {
+            $UpdateAll = true;
+
+            /** To prevent the HTML output that we'd normally see when accessing everything normally. */
+            ob_start();
+
+            /** Let's call the package. */
+            require $Location;
+
+            /** We're done here. Reenable output. */
+            ob_end_clean();
+
+            if (empty($Results)) {
+                $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
+            } elseif (empty($Results['state_msg'])) {
+                $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
+            } else {
+                $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
+            }
+        } else {
+            $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
         }
         $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
     }

@@ -12,6 +12,11 @@ Versioning guidelines for SemVer can be found at: http://www.semver.org/
   already up-to-date instead of displaying an error message. Also improved
   status message aesthetic.
 
+- [2017.12.06; NEW FEATURE; Maikuolan]: Added the new method "localUpdate" and
+  the ability to perform updates locally. This new ability requires package
+  versions CIDRAM >= 1.3.0 or phpMussel >= 1.2.0 (older versions won't be able
+  to be updated using this method). Package loaders must also be updated.
+
 === Version/Release 0.1.0 ===
 FIRST TAGGED RELEASE.
 
