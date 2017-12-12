@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.1.0 (last modified: 2017.12.06).
+ * Cronable v1.1.0 (last modified: 2017.12.12).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -206,7 +206,7 @@ class Cronable
             } elseif (empty($Results['state_msg'])) {
                 $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
             } else {
-                $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
+                $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results['state_msg'] . "\n\n";
             }
         } else {
             $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
