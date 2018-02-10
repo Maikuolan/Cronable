@@ -1,3 +1,6 @@
+[![PHP >= 5.4.0](https://img.shields.io/badge/PHP-%3E%3D%205.4.0-8892bf.svg)](https://maikuolan.github.io/Compatibility-Charts/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 ## Cronable.
 
 Cronable is a simple script that allows auto-updating CIDRAM and phpMussel via cronjobs.
