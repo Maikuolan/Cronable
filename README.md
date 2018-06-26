@@ -3,9 +3,7 @@
 
 ## Cronable.
 
-Cronable is a simple script that allows auto-updating CIDRAM and phpMussel via cronjobs.
-
-*Cronable isn't compatible with all versions of the packages that it's associated with. For compatibility information (to know which versions of the packages that it's associated with that it can update from), please refer to the [Compatibility Charts](https://maikuolan.github.io/Compatibility-Charts/).*
+Cronable is a simple script that allows auto-updating [![CIDRAM >= 1.2.0](https://img.shields.io/badge/CIDRAM-%3E%3D%201.2.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) and [![phpMussel >= 1.1.0](https://img.shields.io/badge/phpMussel-%3E%3D%201.1.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) via cronjobs.
 
 ---
 
@@ -41,4 +39,4 @@ Please use the issues page of this repository.
 
 ---
 
-*Last modified: 29 October 2017 (2017.10.29).*
+*Last modified: 27 June 2018 (2018.06.27).*
