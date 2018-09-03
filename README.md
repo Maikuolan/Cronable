@@ -40,4 +40,4 @@ Please use the issues page of this repository.
 
 ---
 
-*Last modified: 27 June 2018 (2018.06.27).*
+*Last modified: 3 September 2018 (2018.09.03).*
