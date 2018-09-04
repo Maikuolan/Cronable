@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.1.0 (last modified: 2017.12.12).
+ * Cronable v1.2.0 (last modified: 2018.09.05).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -17,7 +17,7 @@ class Cronable
 {
 
     /** Cronable user agent. */
-    private $ScriptUA = 'Cronable v1.1.0';
+    private $ScriptUA = 'Cronable v1.2.0';
 
     /** Default timeout. */
     private $Timeout = 12;
@@ -27,6 +27,9 @@ class Cronable
 
     /** Output we'll send upon completing tasks. */
     public $Output = '';
+
+    /** Determines whether to display debugging information when relevant. */
+    public $Debugging = false;
 
     /**
      * Used to send cURL requests.
@@ -104,7 +107,7 @@ class Cronable
             'password' => $Arr['Password'],
         ];
         $Request = $this->request($Location, http_build_query($Arr));
-        if (substr($Request, 0, 1) == '{' && substr($Request, -1) == '}') {
+        if (substr($Request, 0, 1) === '{' && substr($Request, -1) === '}') {
             $Request = json_decode($Request, true, 3);
             if (!empty($Request['state_msg'])) {
                 return $Request['state_msg'];
@@ -155,6 +158,14 @@ class Cronable
                 $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
             } elseif ($Results === false) {
                 $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
+                if ($this->Debugging) {
+                    $this->Output .= sprintf(
+                        "Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- Results === `false`.\n\n",
+                        $Identifier,
+                        'execute()',
+                        $Task
+                    );
+                }
             } else {
                 $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
             }
@@ -203,6 +214,14 @@ class Cronable
 
             if (empty($Results)) {
                 $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
+                if ($this->Debugging) {
+                    $this->Output .= sprintf(
+                        "Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- Results are empty.\n\n",
+                        $Identifier,
+                        'localUpdate()',
+                        $Location
+                    );
+                }
             } elseif (empty($Results['state_msg'])) {
                 $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
             } else {
@@ -210,6 +229,14 @@ class Cronable
             }
         } else {
             $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
+            if ($this->Debugging) {
+                $this->Output .= sprintf(
+                    "Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- Package not known or location unreadable.\n\n",
+                    $Identifier,
+                    'localUpdate()',
+                    $Location
+                );
+            }
         }
         $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
     }
