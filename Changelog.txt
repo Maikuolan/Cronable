@@ -7,7 +7,16 @@ Versioning guidelines for SemVer can be found at: http://www.semver.org/
 
 === Changes made since last versioned release ===
 
-- [2018.09.05; Maikuolan]: Implemented some rudimentary optional debugging.
+(none)
+
+=== Version/Release 1.2.0 ===
+MINOR RELEASE.
+
+- [2018.09.05/10; Maikuolan; Minor code change]: Implemented some rudimentary
+  optional debugging. Errors can now be logged accordingly.
+
+Caleb M (Maikuolan),
+Sep 10, 2018.
 
 === Version/Release 1.1.0 ===
 MINOR RELEASE.
