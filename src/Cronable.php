@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.2.0 (last modified: 2018.09.10).
+ * Cronable v1.2.0 (last modified: 2020.05.12).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -17,7 +17,7 @@ class Cronable
 {
 
     /** Cronable user agent. */
-    private $ScriptUA = 'Cronable v1.2.0';
+    private $ScriptUA = 'Cronable v1.2.1';
 
     /** Default timeout. */
     private $Timeout = 12;
@@ -31,7 +31,14 @@ class Cronable
     /** Determines whether to display debugging information when relevant. */
     public $Debugging = false;
 
-    /** Generate error logs when debugging is enabled. */
+    /**
+     * Generate error logs when debugging is enabled.
+     *
+     * @param string $Identifier
+     * @param string $Method
+     * @param string $Task
+     * @param string $Results
+     */
     private function cronableError($Identifier, $Method, $Task, $Results = 'Results are empty')
     {
         $Data = sprintf("Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- %4\$s.\n\n", $Identifier, $Method, $Task, $Results);
@@ -93,7 +100,15 @@ class Cronable
         return $Response;
     }
 
-    /** Update method. */
+    /**
+     * Update method.
+     *
+     * @param array $Arr        Instructions for the update method (e.g.,
+     *                          package, location, etc).
+     * @return mixed            False(bool) on failure; True(bool) when
+     *                          already up-to-date; Update message (string)
+     *                          on success.
+     */
     private function update($Arr)
     {
         if (!empty($Arr['Package'])) {
@@ -107,9 +122,12 @@ class Cronable
                 $FormTarget = 'phpmussel-form-target';
             }
         }
+
+        /** Guard. */
         if (empty($Package) || empty($Arr['Username']) || empty($Arr['Password']) || empty($Arr['Location'])) {
             return false;
         }
+
         $Location = $Arr['Location'] . $Query;
         $Arr = [
             'CronMode' => 1,
@@ -145,14 +163,27 @@ class Cronable
         return true;
     }
 
-    /** Build identifier. */
+    /**
+     * Build identifier.
+     *
+     * @param string $Package
+     * @param string $Location
+     * @return string
+     */
     private function buildIdentifier($Package, $Location)
     {
         $Location = preg_replace('~^(?:https?\:\/\/)?(?:www\d{0,3}\.)?~i', '', $Location);
         return '[' . $Package . '@' . $Location . ']';
     }
 
-    /** Create task method. */
+    /**
+     * Create task method.
+     *
+     * @param string $Package
+     * @param string $Username
+     * @param string $Password
+     * @param string $Location
+     */
     public function createTask($Package, $Username, $Password, $Location)
     {
         $this->Tasks[] = ['Package' => $Package, 'Username' => $Username, 'Password' => $Password, 'Location' => $Location];
@@ -183,9 +214,15 @@ class Cronable
     /**
      * Local update « ugly and blasphemous, I know, but Cronable wasn't originally intended to be used in this way, yet
      * it has been requested, so tough it out (,,ﾟДﾟ) ».
+     *
+     * @param string $Package
+     * @param string $Username
+     * @param string $Password
+     * @param string $Location
      */
     public function localUpdate($Package, $Username, $Password, $Location)
     {
+
         /** Let's fake it all. */
         $_POST['CronMode'] = true;
         $_POST['username'] = $Username;
@@ -237,5 +274,4 @@ class Cronable
         }
         $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
     }
-
 }
