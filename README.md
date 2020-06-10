@@ -4,7 +4,7 @@
 
 ## Cronable.
 
-Cronable is a simple script that allows auto-updating [![CIDRAM >= 1.2.0](https://img.shields.io/badge/CIDRAM-%3E%3D%201.2.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) and [![phpMussel >= 1.1.0](https://img.shields.io/badge/phpMussel-%3E%3D%201.1.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) via cronjobs.
+Cronable is a simple script that allows auto-updating [![CIDRAM >= 1.2.0](https://img.shields.io/badge/CIDRAM-%3E%3D%201.2.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) and [![phpMussel >= 1.1.0 < 3.0.0](https://img.shields.io/badge/phpMussel-%3E%3D%201.1.0%20%3C%203.0.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) via cronjobs.
 
 ---
 
