@@ -2,7 +2,7 @@
 namespace Maikuolan\Cronable;
 
 /**
- * Cronable v1.2.0 (last modified: 2020.06.11).
+ * Cronable v1.2.1 (last modified: 2020.11.29).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
