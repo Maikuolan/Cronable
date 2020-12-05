@@ -7,9 +7,17 @@ Versioning guidelines for SemVer can be found at: https://semver.org/
 
 === Changes made since last versioned release ===
 
+(none)
+
+=== Version/Release 1.2.1 ===
+MAINTENANCE RELEASE.
+
 - [2020.05.12; Maikuolan]: Slightly improved some commenting/annotations.
 
 - [2020.06.11; Maikuolan]: Slightly improved some PHPDoc annotations.
+
+Caleb M (Maikuolan),
+December 5, 2020.
 
 === Version/Release 1.2.0 ===
 MINOR RELEASE.
