@@ -5,7 +5,8 @@
     "license": "MIT",
     "support": {
         "issues": "https://github.com/Maikuolan/Cronable/issues",
-        "source": "https://github.com/Maikuolan/Cronable"
+        "source": "https://github.com/Maikuolan/Cronable",
+        "rss": "https://github.com/Maikuolan/Cronable/releases.atom"
     },
     "require": {
         "php": ">=5.4.0",
