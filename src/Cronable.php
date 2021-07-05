@@ -1,8 +1,6 @@
 <?php
-namespace Maikuolan\Cronable;
-
 /**
- * Cronable v1.2.1 (last modified: 2020.11.29).
+ * Cronable v1.2.2 (last modified: 2021.07.05).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -10,24 +8,36 @@ namespace Maikuolan\Cronable;
  * CRONABLE COPYRIGHT 2017 and beyond by Caleb Mazalevskis (Maikuolan).
  *
  * License: MIT License
- *
  * @see LICENSE.txt
  */
+
+namespace Maikuolan\Cronable;
+
 class Cronable
 {
-    /** Cronable user agent. */
-    private $ScriptUA = 'Cronable v1.2.1';
+    /**
+     * @var string Cronable user agent.
+     */
+    private $ScriptUA = 'Cronable v1.2.2';
 
-    /** Default timeout. */
+    /**
+     * @var int Default timeout.
+     */
     private $Timeout = 12;
 
-    /** Will be populated by tasks. */
+    /**
+     * @var array Will be populated by tasks.
+     */
     private $Tasks = [];
 
-    /** Output we'll send upon completing tasks. */
+    /**
+     * @var string Output we'll send upon completing tasks.
+     */
     public $Output = '';
 
-    /** Determines whether to display debugging information when relevant. */
+    /**
+     * @var bool Determines whether to display debugging information when relevant.
+     */
     public $Debugging = false;
 
     /**
@@ -37,6 +47,7 @@ class Cronable
      * @param string $Method
      * @param string $Task
      * @param string $Results
+     * @return void
      */
     private function cronableError($Identifier, $Method, $Task, $Results = 'Results are empty')
     {
@@ -182,13 +193,18 @@ class Cronable
      * @param string $Username
      * @param string $Password
      * @param string $Location
+     * @return void
      */
     public function createTask($Package, $Username, $Password, $Location)
     {
         $this->Tasks[] = ['Package' => $Package, 'Username' => $Username, 'Password' => $Password, 'Location' => $Location];
     }
 
-    /** Execute all tasks. */
+    /**
+     * Execute all tasks.
+     *
+     * @return void
+     */
     public function execute()
     {
         $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
@@ -218,10 +234,10 @@ class Cronable
      * @param string $Username
      * @param string $Password
      * @param string $Location
+     * @return void
      */
     public function localUpdate($Package, $Username, $Password, $Location)
     {
-
         /** Let's fake it all. */
         $_POST['CronMode'] = true;
         $_POST['username'] = $Username;
