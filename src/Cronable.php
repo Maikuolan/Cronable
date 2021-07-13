@@ -1,6 +1,6 @@
 <?php
 /**
- * Cronable v1.2.2 (last modified: 2021.07.05).
+ * Cronable v1.2.2 (last modified: 2021.07.13).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -140,7 +140,7 @@ class Cronable
 
         $Location = $Arr['Location'] . $Query;
         $Arr = [
-            'CronMode' => 1,
+            'CronMode' => empty($Arr['Mode']) ? 'All' : $Arr['Mode'],
             $FormTarget => 'updates',
             'do' => 'get-list',
             'username' => $Arr['Username'],
@@ -193,11 +193,18 @@ class Cronable
      * @param string $Username
      * @param string $Password
      * @param string $Location
+     * @param string $Mode What to update (specify 'Signatures' to update just signatures; anything else to update everything).
      * @return void
      */
-    public function createTask($Package, $Username, $Password, $Location)
+    public function createTask($Package, $Username, $Password, $Location, $Mode = 'All')
     {
-        $this->Tasks[] = ['Package' => $Package, 'Username' => $Username, 'Password' => $Password, 'Location' => $Location];
+        $this->Tasks[] = [
+            'Package' => $Package,
+            'Username' => $Username,
+            'Password' => $Password,
+            'Location' => $Location,
+            'Mode' => $Mode
+        ];
     }
 
     /**
@@ -234,12 +241,13 @@ class Cronable
      * @param string $Username
      * @param string $Password
      * @param string $Location
+     * @param string $UpdateAll What to update (specify 'Signatures' to update just signatures; anything else to update everything).
      * @return void
      */
-    public function localUpdate($Package, $Username, $Password, $Location)
+    public function localUpdate($Package, $Username, $Password, $Location, $UpdateAll = 'All')
     {
         /** Let's fake it all. */
-        $_POST['CronMode'] = true;
+        $_POST['CronMode'] = $UpdateAll;
         $_POST['username'] = $Username;
         $_POST['password'] = $Password;
         $_SERVER['HTTP_USER_AGENT'] = $this->ScriptUA;
@@ -252,7 +260,6 @@ class Cronable
                 $_POST['phpmussel-form-target'] = 'updates';
             }
         }
-        $UpdateAll = true;
         if (empty($_SERVER['REMOTE_ADDR'])) {
             $_SERVER['REMOTE_ADDR'] = '::1';
         }
@@ -260,8 +267,6 @@ class Cronable
         $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
         $Identifier = empty($Location) ? '[Unknown]' : '[' . $Package . '@' . $Location . ']';
         if (is_readable($Location) && $PackageKnown) {
-            $UpdateAll = true;
-
             /** To prevent the HTML output that we'd normally see when accessing everything normally. */
             ob_start();
 

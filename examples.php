@@ -24,16 +24,17 @@ $Cronable = new Cronable;
 /**
  * Create a task to update CIDRAM or phpMussel.
  *
- * The createTask method accepts 4 parameters:
+ * The createTask method accepts 5 parameters:
  * - The type of package to be updated ('CIDRAM' or 'phpMussel').
  * - The username of the front-end account to be used by Cronable for updating the package.
  * - The password of the front-end account to be used by Cronable for updating the package.
  * - The location of the package loader file.
+ * - What to update (specify 'Signatures' to update just signatures; or anything else to update everything).
  *
  * Examples:
  */
-$Cronable->createTask('CIDRAM', 'username', 'password', 'http://foo.tld/cidram/loader.php');
-$Cronable->createTask('phpMussel', 'username', 'password', 'http://foo.tld/phpmussel/loader.php');
+$Cronable->createTask('CIDRAM', 'username', 'password', 'http://foo.tld/cidram/loader.php', 'Signatures');
+$Cronable->createTask('phpMussel', 'username', 'password', 'http://foo.tld/phpmussel/loader.php', 'Everything');
 
 /** After you've created your tasks, you'll want to execute them all. */
 $Cronable->execute();
@@ -46,16 +47,17 @@ $Cronable->execute();
  * multiple tasks. If you use this, to update separate packages or to execute
  * multiple tasks, you'll need to run multiple instances of Cronable.
  *
- * The localUpdate method accepts 4 parameters:
+ * The localUpdate method accepts 5 parameters:
  * - The type of package to be updated ('CIDRAM' or 'phpMussel').
  * - The username of the front-end account to be used by Cronable for updating the package.
  * - The password of the front-end account to be used by Cronable for updating the package.
  * - The location of the package loader file.
+ * - What to update (specify 'Signatures' to update just signatures; or anything else to update everything).
  *
  * Examples:
  */
-$Cronable->localUpdate('CIDRAM', 'username', 'password', '/public_html/cidram/loader.php');
-$Cronable->localUpdate('phpMussel', 'username', 'password', '/public_html/phpmussel/loader.php');
+$Cronable->localUpdate('CIDRAM', 'username', 'password', '/public_html/cidram/loader.php', 'Signatures');
+$Cronable->localUpdate('phpMussel', 'username', 'password', '/public_html/phpmussel/loader.php', 'Everything');
 
 /** ---------- Then finally: ---------- */
 
