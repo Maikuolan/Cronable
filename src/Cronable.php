@@ -1,6 +1,6 @@
 <?php
 /**
- * Cronable v1.2.2 (last modified: 2021.07.13).
+ * Cronable v1.2.2 (last modified: 2021.07.14).
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
@@ -152,10 +152,17 @@ class Cronable
             if (!empty($Request['state_msg'])) {
                 return $Request['state_msg'];
             }
-            if (empty($Request['outdated'])) {
-                return false;
+            if ($Arr['CronMode'] === 'Signatures') {
+                if (empty($Request['outdated_signature_files'])) {
+                    return false;
+                }
+                $Arr['ID'] = $Request['outdated_signature_files'];
+            } else {
+                if (empty($Request['outdated'])) {
+                    return false;
+                }
+                $Arr['ID'] = $Request['outdated'];
             }
-            $Arr['ID'] = $Request['outdated'];
             $Arr['do'] = 'update-component';
             $Request = $this->request($Location, http_build_query($Arr));
         } elseif (!empty($Request)) {
@@ -234,8 +241,7 @@ class Cronable
     }
 
     /**
-     * Local update « ugly and blasphemous, I know, but Cronable wasn't originally intended to be used in this way, yet
-     * it has been requested, so tough it out (,,ﾟДﾟ) ».
+     * Update locally.
      *
      * @param string $Package
      * @param string $Username

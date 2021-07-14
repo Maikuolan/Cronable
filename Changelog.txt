@@ -7,8 +7,16 @@ Versioning guidelines for SemVer can be found at: https://semver.org/
 
 === Changes made since last versioned release ===
 
+(none)
+
+=== Version/Release 1.2.2 ===
+PATCH RELEASE.
+
 - [2021.07.13; Maikuolan]: Added the ability to choose whether to update
   just the signature files only, or update everything.
+
+Caleb M (Maikuolan),
+July 14, 2021.
 
 === Version/Release 1.2.1 ===
 MAINTENANCE RELEASE.
