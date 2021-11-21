@@ -1,12 +1,13 @@
-[![PHP >= 5.4.0](https://img.shields.io/badge/PHP-%3E%3D%205.4.0-8892bf.svg)](https://maikuolan.github.io/Compatibility-Charts/)
+[![PHP >= 5.4](https://img.shields.io/badge/PHP-%3E%3D%205.4-8892bf.svg)](https://maikuolan.github.io/Compatibility-Charts/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 ## Cronable.
 
-Cronable is a simple script that allows auto-updating [![CIDRAM >= 1.2.0](https://img.shields.io/badge/CIDRAM-%3E%3D%201.2.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) and [![phpMussel >= 1.1.0 < 3.0.0](https://img.shields.io/badge/phpMussel-%3E%3D%201.1.0%20%3C%203.0.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) via cronjobs.
+Cronable is a simple script that allows auto-updating [![CIDRAM >= 1.2](https://img.shields.io/badge/CIDRAM-%3E%3D%201.2-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) and [![phpMussel >= 1.1 < 3.0](https://img.shields.io/badge/phpMussel-%3E%3D%201.1%20%3C%203.0-ff8800.svg)](https://maikuolan.github.io/Compatibility-Charts/) via cronjobs.
 
 ---
+
 
 ### How to install:
 
@@ -17,6 +18,7 @@ You can download the file containing the class, [Cronable.php](src/Cronable.php)
 Cronable is a stand-alone class that has no dependencies other than PHP, the cURL extension of PHP, and something to trigger it at the desired interval (generally, a cron manager of some description), and so, downloading it is all there really is to "installing" it.
 
 ---
+
 
 ### How to use:
 
@@ -30,6 +32,7 @@ That's everything. :-)
 
 ---
 
+
 ### Other information:
 
 #### Licensing:
@@ -40,4 +43,5 @@ Please use the issues page of this repository.
 
 ---
 
-*Last modified: 3 September 2018 (2018.09.03).*
+
+Last Updated: 21 November 2021 (2021.11.21).
