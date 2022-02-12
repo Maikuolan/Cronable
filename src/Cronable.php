@@ -1,6 +1,7 @@
 <?php
 /**
- * Cronable v1.2.2 (last modified: 2021.07.14).
+ * Cronable v1.2.2 (last modified: 2022.02.12).
+ * @link https://github.com/Maikuolan/Cronable
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
  * and phpMussel via cronjobs.
