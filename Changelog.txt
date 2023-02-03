@@ -7,11 +7,21 @@ Versioning guidelines for SemVer can be found at: https://semver.org/
 
 === Changes made since last versioned release ===
 
+(none)
+
+=== Version/Release 1.2.3 ===
+PATCH RELEASE.
+
 - [2023.02.03; Bug-fix; Maikuolan]: When creating a remote update task to
   update only signature files, when there aren't any outdated signatures, but
   other outdated components are detected, Cronable would report it as an error,
   instead of the more appropriate response that there simply aren't currently
   any outdated signature files; Fixed.
+
+- [2023.02.03; Bug-fix; Maikuolan]: localUpdate() broken for CIDRAM v3; Fixed (#9).
+
+Caleb M (Maikuolan),
+February 3, 2023.
 
 === Version/Release 1.2.2 ===
 PATCH RELEASE.

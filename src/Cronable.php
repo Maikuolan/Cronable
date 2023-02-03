@@ -130,12 +130,17 @@ class Cronable
             /** We're done here. Reenable output. */
             ob_end_clean();
 
-            if (empty($Results)) {
+            /** v3 fix. */
+            if (!isset($Results) && isset($GLOBALS['Results'])) {
+                $Results = $GLOBALS['Results'];
+            }
+
+            if (!isset($Results['state_msg'])) {
                 $this->Output .= 'An error occurred while attempting to update at ' . $Identifier . ". :-(\n\n";
                 if ($this->Debugging) {
                     $this->cronableError($Identifier, 'localUpdate()', $Location);
                 }
-            } elseif (empty($Results['state_msg'])) {
+            } elseif ($Results['state_msg'] === '') {
                 $this->Output .= 'Everything already up-to-date at ' . $Identifier . ". :-)\n\n";
             } else {
                 $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results['state_msg'] . "\n\n";
