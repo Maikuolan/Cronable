@@ -1,6 +1,6 @@
 <?php
 /**
- * Cronable v1.2.2 (last modified: 2022.02.12).
+ * Cronable v1.2.3 (last modified: 2023.02.03).
  * @link https://github.com/Maikuolan/Cronable
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
@@ -17,21 +17,6 @@ namespace Maikuolan\Cronable;
 class Cronable
 {
     /**
-     * @var string Cronable user agent.
-     */
-    private $ScriptUA = 'Cronable v1.2.2';
-
-    /**
-     * @var int Default timeout.
-     */
-    private $Timeout = 12;
-
-    /**
-     * @var array Will be populated by tasks.
-     */
-    private $Tasks = [];
-
-    /**
      * @var string Output we'll send upon completing tasks.
      */
     public $Output = '';
@@ -42,157 +27,19 @@ class Cronable
     public $Debugging = false;
 
     /**
-     * Generate error logs when debugging is enabled.
-     *
-     * @param string $Identifier
-     * @param string $Method
-     * @param string $Task
-     * @param string $Results
-     * @return void
+     * @var string Cronable user agent.
      */
-    private function cronableError($Identifier, $Method, $Task, $Results = 'Results are empty')
-    {
-        $Data = sprintf("Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- %4\$s.\n\n", $Identifier, $Method, $Task, $Results);
-        $File = __DIR__ . '/error.log';
-        if ($Handle = fopen($File, 'a')) {
-            fwrite($Handle, $Data);
-            fclose($Handle);
-        }
-        $this->Output .= $Data;
-    }
+    private $ScriptUA = 'Cronable v1.2.3';
 
     /**
-     * Used to send cURL requests.
-     *
-     * @param string $URI       The resource to request.
-     * @param array $Params     An optional associative array of key-value
-     *                          pairs to to send along with the request.
-     * @param string $Timeout   An optional timeout limit (defaults to 12
-     *                          seconds).
-     * @return string           The results of the request.
+     * @var int Default timeout.
      */
-    private function request($URI, $Params = '', $Timeout = '')
-    {
-        if (!$Timeout) {
-            $Timeout = $this->Timeout;
-        }
-
-        /** Initialise the cURL session. */
-        $Request = curl_init($URI);
-
-        $LCURI = strtolower($URI);
-        $SSL = (substr($LCURI, 0, 6) === 'https:');
-
-        curl_setopt($Request, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($Request, CURLOPT_HEADER, false);
-        if (empty($Params)) {
-            curl_setopt($Request, CURLOPT_POST, false);
-        } else {
-            curl_setopt($Request, CURLOPT_POST, true);
-            curl_setopt($Request, CURLOPT_POSTFIELDS, $Params);
-        }
-        if ($SSL) {
-            curl_setopt($Request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
-            curl_setopt($Request, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_setopt($Request, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($Request, CURLOPT_MAXREDIRS, 1);
-        curl_setopt($Request, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($Request, CURLOPT_TIMEOUT, $Timeout);
-        curl_setopt($Request, CURLOPT_USERAGENT, $this->ScriptUA);
-
-        /** Execute and get the response. */
-        $Response = curl_exec($Request);
-
-        /** Close the cURL session. */
-        curl_close($Request);
-
-        /** Return the results of the request. */
-        return $Response;
-    }
+    private $Timeout = 12;
 
     /**
-     * Update method.
-     *
-     * @param array $Arr        Instructions for the update method (e.g.,
-     *                          package, location, etc).
-     * @return mixed            False(bool) on failure; True(bool) when
-     *                          already up-to-date; Update message (string)
-     *                          on success.
+     * @var array Will be populated by tasks.
      */
-    private function update($Arr)
-    {
-        if (!empty($Arr['Package'])) {
-            if ($Arr['Package'] === 'CIDRAM') {
-                $Package = 'CIDRAM';
-                $Query = '?cidram-page=updates';
-                $FormTarget = 'cidram-form-target';
-            } elseif ($Arr['Package'] === 'phpMussel') {
-                $Package = 'phpMussel';
-                $Query .= '?phpmussel-page=updates';
-                $FormTarget = 'phpmussel-form-target';
-            }
-        }
-
-        /** Guard. */
-        if (empty($Package) || empty($Arr['Username']) || empty($Arr['Password']) || empty($Arr['Location'])) {
-            return false;
-        }
-
-        $Location = $Arr['Location'] . $Query;
-        $Arr = [
-            'CronMode' => empty($Arr['Mode']) ? 'All' : $Arr['Mode'],
-            $FormTarget => 'updates',
-            'do' => 'get-list',
-            'username' => $Arr['Username'],
-            'password' => $Arr['Password'],
-        ];
-        $Request = $this->request($Location, http_build_query($Arr));
-        if (substr($Request, 0, 1) === '{' && substr($Request, -1) === '}') {
-            $Request = json_decode($Request, true, 3);
-            if (!empty($Request['state_msg'])) {
-                return $Request['state_msg'];
-            }
-            if ($Arr['CronMode'] === 'Signatures') {
-                if (empty($Request['outdated_signature_files'])) {
-                    return false;
-                }
-                $Arr['ID'] = $Request['outdated_signature_files'];
-            } else {
-                if (empty($Request['outdated'])) {
-                    return false;
-                }
-                $Arr['ID'] = $Request['outdated'];
-            }
-            $Arr['do'] = 'update-component';
-            $Request = $this->request($Location, http_build_query($Arr));
-        } elseif (!empty($Request)) {
-            return false;
-        }
-        if (substr($Request, 0, 1) == '{' && substr($Request, -1) == '}') {
-            $Request = json_decode($Request, true, 3);
-            if (empty($Request)) {
-                return false;
-            }
-            if (!empty($Request['state_msg'])) {
-                return $Request['state_msg'];
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Build identifier.
-     *
-     * @param string $Package
-     * @param string $Location
-     * @return string
-     */
-    private function buildIdentifier($Package, $Location)
-    {
-        $Location = preg_replace('~^(?:https?\:\/\/)?(?:www\d{0,3}\.)?~i', '', $Location);
-        return '[' . $Package . '@' . $Location . ']';
-    }
+    private $Tasks = [];
 
     /**
      * Create task method.
@@ -300,5 +147,168 @@ class Cronable
             }
         }
         $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
+    }
+
+    /**
+     * Generate error logs when debugging is enabled.
+     *
+     * @param string $Identifier
+     * @param string $Method
+     * @param string $Task
+     * @param string $Results
+     * @return void
+     */
+    private function cronableError($Identifier, $Method, $Task, $Results = 'Results are empty')
+    {
+        $Data = sprintf("Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- %4\$s.\n\n", $Identifier, $Method, $Task, $Results);
+        $File = __DIR__ . '/error.log';
+        if ($Handle = fopen($File, 'a')) {
+            fwrite($Handle, $Data);
+            fclose($Handle);
+        }
+        $this->Output .= $Data;
+    }
+
+    /**
+     * Used to send cURL requests.
+     *
+     * @param string $URI       The resource to request.
+     * @param array $Params     An optional associative array of key-value
+     *                          pairs to to send along with the request.
+     * @param string $Timeout   An optional timeout limit (defaults to 12
+     *                          seconds).
+     * @return string           The results of the request.
+     */
+    private function request($URI, $Params = '', $Timeout = '')
+    {
+        if (!$Timeout) {
+            $Timeout = $this->Timeout;
+        }
+
+        /** Initialise the cURL session. */
+        $Request = curl_init($URI);
+
+        $LCURI = strtolower($URI);
+        $SSL = (substr($LCURI, 0, 6) === 'https:');
+
+        curl_setopt($Request, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($Request, CURLOPT_HEADER, false);
+        if (empty($Params)) {
+            curl_setopt($Request, CURLOPT_POST, false);
+        } else {
+            curl_setopt($Request, CURLOPT_POST, true);
+            curl_setopt($Request, CURLOPT_POSTFIELDS, $Params);
+        }
+        if ($SSL) {
+            curl_setopt($Request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+            curl_setopt($Request, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        curl_setopt($Request, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($Request, CURLOPT_MAXREDIRS, 1);
+        curl_setopt($Request, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($Request, CURLOPT_TIMEOUT, $Timeout);
+        curl_setopt($Request, CURLOPT_USERAGENT, $this->ScriptUA);
+
+        /** Execute and get the response. */
+        $Response = curl_exec($Request);
+
+        /** Close the cURL session. */
+        curl_close($Request);
+
+        /** Return the results of the request. */
+        return $Response;
+    }
+
+    /**
+     * Update method.
+     *
+     * @param array $Arr    Instructions for the update method (e.g., package,
+     *                      location, etc).
+     * @return bool|string  False when update fails; True when already
+     *                      up-to-date; Actual update status message when
+     *                      update succeeds.
+     */
+    private function update($Arr)
+    {
+        if (!empty($Arr['Package'])) {
+            if ($Arr['Package'] === 'CIDRAM') {
+                $Package = 'CIDRAM';
+                $Query = '?cidram-page=updates';
+                $FormTarget = 'cidram-form-target';
+            } elseif ($Arr['Package'] === 'phpMussel') {
+                $Package = 'phpMussel';
+                $Query .= '?phpmussel-page=updates';
+                $FormTarget = 'phpmussel-form-target';
+            }
+        }
+
+        /** Guard. */
+        if (empty($Package) || empty($Arr['Username']) || empty($Arr['Password']) || empty($Arr['Location'])) {
+            return false;
+        }
+
+        $Location = $Arr['Location'] . $Query;
+        $Arr = [
+            'CronMode' => empty($Arr['Mode']) ? 'All' : $Arr['Mode'],
+            $FormTarget => 'updates',
+            'do' => 'get-list',
+            'username' => $Arr['Username'],
+            'password' => $Arr['Password'],
+        ];
+        if (($Request = $this->request($Location, http_build_query($Arr))) === '') {
+            return true;
+        }
+        if (substr($Request, 0, 1) !== '{' || substr($Request, -1) !== '}') {
+            return false;
+        }
+        $Request = json_decode($Request, true, 3);
+        if (isset($Request['state_msg']) && $Request['state_msg'] !== '') {
+            return $Request['state_msg'];
+        }
+        if (
+            !isset($Request['outdated_signature_files'], $Request['outdated']) ||
+            !is_array($Request['outdated_signature_files']) ||
+            !is_array($Request['outdated']) ||
+            (
+                ($OutdatedSigFileCount = count($Request['outdated_signature_files'])) === 0 &&
+                ($OutdatedCount = count($Request['outdated'])) === 0
+            )
+        ) {
+            return false;
+        }
+        if ($Arr['CronMode'] === 'Signatures') {
+            if ($OutdatedSigFileCount === 0) {
+                return "All signature files are already all up-to-date.\nOther outdated components were detected, but not updated at this time due to Cronable settings.";
+            }
+            $Arr['ID'] = $Request['outdated_signature_files'];
+        } else {
+            if ($OutdatedCount === 0) {
+                return false;
+            }
+            $Arr['ID'] = $Request['outdated'];
+        }
+        $Arr['do'] = 'update-component';
+        $Request = $this->request($Location, http_build_query($Arr));
+        if (substr($Request, 0, 1) !== '{' || substr($Request, -1) !== '}') {
+            return false;
+        }
+        $Request = json_decode($Request, true, 3);
+        if (isset($Request['state_msg']) && $Request['state_msg'] !== '') {
+            return $Request['state_msg'];
+        }
+        return false;
+    }
+
+    /**
+     * Build identifier.
+     *
+     * @param string $Package
+     * @param string $Location
+     * @return string
+     */
+    private function buildIdentifier($Package, $Location)
+    {
+        $Location = preg_replace('~^(?:https?\:\/\/)?(?:www\d{0,3}\.)?~i', '', $Location);
+        return '[' . $Package . '@' . $Location . ']';
     }
 }
