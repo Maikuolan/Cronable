@@ -1,6 +1,6 @@
 <?php
 /**
- * Cronable v1.2.3 (last modified: 2023.02.03).
+ * Cronable v1.2.4 (last modified: 2026.03.18).
  * @link https://github.com/Maikuolan/Cronable
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
@@ -29,7 +29,7 @@ class Cronable
     /**
      * @var string Cronable user agent.
      */
-    private $ScriptUA = 'Cronable v1.2.3';
+    private $ScriptUA = 'Cronable v1.2.4';
 
     /**
      * @var int Default timeout.
@@ -69,7 +69,7 @@ class Cronable
      */
     public function execute()
     {
-        $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
+        $this->Output .= $this->ScriptUA . "\nTime: " . \date('r') . "\n\n===\n";
         $Tasks = $this->Tasks;
         foreach ($Tasks as $Task) {
             $Identifier = empty($Task['Location']) ? '[Unknown]' : $this->buildIdentifier($Task['Package'], $Task['Location']);
@@ -85,7 +85,7 @@ class Cronable
                 $this->Output .= 'Status for ' . $Identifier . " is as follows:\n" . $Results . "\n\n";
             }
         }
-        $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
+        $this->Output .= "===\n\nTime: " . \date('r') . "\n\n\n";
     }
 
     /**
@@ -118,17 +118,17 @@ class Cronable
             $_SERVER['REMOTE_ADDR'] = '::1';
         }
 
-        $this->Output .= $this->ScriptUA . "\nTime: " . date('r') . "\n\n===\n";
+        $this->Output .= $this->ScriptUA . "\nTime: " . \date('r') . "\n\n===\n";
         $Identifier = empty($Location) ? '[Unknown]' : '[' . $Package . '@' . $Location . ']';
-        if (is_readable($Location) && $PackageKnown) {
+        if (\is_readable($Location) && $PackageKnown) {
             /** To prevent the HTML output that we'd normally see when accessing everything normally. */
-            ob_start();
+            \ob_start();
 
             /** Let's call the package. */
             require $Location;
 
             /** We're done here. Reenable output. */
-            ob_end_clean();
+            \ob_end_clean();
 
             /** v3 fix. */
             if (!isset($Results) && isset($GLOBALS['Results'])) {
@@ -151,7 +151,7 @@ class Cronable
                 $this->cronableError($Identifier, 'localUpdate()', $Location, 'Package not known or location unreadable');
             }
         }
-        $this->Output .= "===\n\nTime: " . date('r') . "\n\n\n";
+        $this->Output .= "===\n\nTime: " . \date('r') . "\n\n\n";
     }
 
     /**
@@ -165,11 +165,11 @@ class Cronable
      */
     private function cronableError($Identifier, $Method, $Task, $Results = 'Results are empty')
     {
-        $Data = sprintf("Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- %4\$s.\n\n", $Identifier, $Method, $Task, $Results);
+        $Data = \sprintf("Debugging (%1\$s):\n- Method: `%2\$s`.\n- Task: `%3\$s`.\n- %4\$s.\n\n", $Identifier, $Method, $Task, $Results);
         $File = __DIR__ . '/error.log';
-        if ($Handle = fopen($File, 'a')) {
-            fwrite($Handle, $Data);
-            fclose($Handle);
+        if ($Handle = \fopen($File, 'a')) {
+            \fwrite($Handle, $Data);
+            \fclose($Handle);
         }
         $this->Output .= $Data;
     }
@@ -191,34 +191,34 @@ class Cronable
         }
 
         /** Initialise the cURL session. */
-        $Request = curl_init($URI);
+        $Request = \curl_init($URI);
 
-        $LCURI = strtolower($URI);
-        $SSL = (substr($LCURI, 0, 6) === 'https:');
+        $LCURI = \strtolower($URI);
+        $SSL = (\substr($LCURI, 0, 6) === 'https:');
 
-        curl_setopt($Request, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($Request, CURLOPT_HEADER, false);
+        \curl_setopt($Request, \CURLOPT_FRESH_CONNECT, true);
+        \curl_setopt($Request, \CURLOPT_HEADER, false);
         if (empty($Params)) {
-            curl_setopt($Request, CURLOPT_POST, false);
+            \curl_setopt($Request, \CURLOPT_POST, false);
         } else {
-            curl_setopt($Request, CURLOPT_POST, true);
-            curl_setopt($Request, CURLOPT_POSTFIELDS, $Params);
+            \curl_setopt($Request, \CURLOPT_POST, true);
+            \curl_setopt($Request, \CURLOPT_POSTFIELDS, $Params);
         }
         if ($SSL) {
-            curl_setopt($Request, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
-            curl_setopt($Request, CURLOPT_SSL_VERIFYPEER, false);
+            \curl_setopt($Request, \CURLOPT_PROTOCOLS, \CURLPROTO_HTTPS);
+            \curl_setopt($Request, \CURLOPT_SSL_VERIFYPEER, false);
         }
-        curl_setopt($Request, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($Request, CURLOPT_MAXREDIRS, 1);
-        curl_setopt($Request, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($Request, CURLOPT_TIMEOUT, $Timeout);
-        curl_setopt($Request, CURLOPT_USERAGENT, $this->ScriptUA);
+        \curl_setopt($Request, \CURLOPT_FOLLOWLOCATION, true);
+        \curl_setopt($Request, \CURLOPT_MAXREDIRS, 1);
+        \curl_setopt($Request, \CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($Request, \CURLOPT_TIMEOUT, $Timeout);
+        \curl_setopt($Request, \CURLOPT_USERAGENT, $this->ScriptUA);
 
         /** Execute and get the response. */
-        $Response = curl_exec($Request);
+        $Response = \curl_exec($Request);
 
         /** Close the cURL session. */
-        curl_close($Request);
+        \curl_close($Request);
 
         /** Return the results of the request. */
         return $Response;
@@ -260,23 +260,23 @@ class Cronable
             'username' => $Arr['Username'],
             'password' => $Arr['Password'],
         ];
-        if (($Request = $this->request($Location, http_build_query($Arr))) === '') {
+        if (($Request = $this->request($Location, \http_build_query($Arr))) === '') {
             return true;
         }
-        if (substr($Request, 0, 1) !== '{' || substr($Request, -1) !== '}') {
+        if (\substr($Request, 0, 1) !== '{' || \substr($Request, -1) !== '}') {
             return false;
         }
-        $Request = json_decode($Request, true, 3);
+        $Request = \json_decode($Request, true, 3);
         if (isset($Request['state_msg']) && $Request['state_msg'] !== '') {
             return $Request['state_msg'];
         }
         if (
             !isset($Request['outdated_signature_files'], $Request['outdated']) ||
-            !is_array($Request['outdated_signature_files']) ||
-            !is_array($Request['outdated']) ||
+            !\is_array($Request['outdated_signature_files']) ||
+            !\is_array($Request['outdated']) ||
             (
-                ($OutdatedSigFileCount = count($Request['outdated_signature_files'])) === 0 &&
-                ($OutdatedCount = count($Request['outdated'])) === 0
+                ($OutdatedSigFileCount = \count($Request['outdated_signature_files'])) === 0 &&
+                ($OutdatedCount = \count($Request['outdated'])) === 0
             )
         ) {
             return false;
@@ -293,11 +293,11 @@ class Cronable
             $Arr['ID'] = $Request['outdated'];
         }
         $Arr['do'] = 'update-component';
-        $Request = $this->request($Location, http_build_query($Arr));
-        if (substr($Request, 0, 1) !== '{' || substr($Request, -1) !== '}') {
+        $Request = $this->request($Location, \http_build_query($Arr));
+        if (\substr($Request, 0, 1) !== '{' || \substr($Request, -1) !== '}') {
             return false;
         }
-        $Request = json_decode($Request, true, 3);
+        $Request = \json_decode($Request, true, 3);
         if (isset($Request['state_msg']) && $Request['state_msg'] !== '') {
             return $Request['state_msg'];
         }
@@ -313,7 +313,7 @@ class Cronable
      */
     private function buildIdentifier($Package, $Location)
     {
-        $Location = preg_replace('~^(?:https?\:\/\/)?(?:www\d{0,3}\.)?~i', '', $Location);
+        $Location = \preg_replace('~^(?:https?\:\/\/)?(?:www\d{0,3}\.)?~i', '', $Location);
         return '[' . $Package . '@' . $Location . ']';
     }
 }
