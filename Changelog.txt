@@ -5,6 +5,13 @@ Cronable adheres to the SemVer guidelines for versioning.
 
 Versioning guidelines for SemVer can be found at: https://semver.org/
 
+=== Version/Release 1.2.5 ===
+PATCH RELEASE.
+
+- [2026.05.13]: Since PHP8, curl_close() has had no effect, and has been
+  deprecated as of PHP 8.5; Accordingly, where used, it has been guarded by the
+  PHP version ID.
+
 === Version/Release 1.2.4 ===
 PATCH RELEASE.
 

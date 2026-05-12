@@ -1,6 +1,6 @@
 <?php
 /**
- * Cronable v1.2.4 (last modified: 2026.03.18).
+ * Cronable v1.2.5 (last modified: 2026.05.13).
  * @link https://github.com/Maikuolan/Cronable
  *
  * Description: Cronable is a simple script that allows auto-updating CIDRAM
@@ -29,7 +29,7 @@ class Cronable
     /**
      * @var string Cronable user agent.
      */
-    private $ScriptUA = 'Cronable v1.2.4';
+    private $ScriptUA = 'Cronable v1.2.5';
 
     /**
      * @var int Default timeout.
@@ -217,7 +217,7 @@ class Cronable
         /** Execute and get the response. */
         $Response = \curl_exec($Request);
 
-        /** Close the cURL session. */
+        /** Close the cURL session (PHP < 8). */
         if (\PHP_VERSION_ID < 80000) {
             \curl_close($Request);
         }
