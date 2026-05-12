@@ -218,7 +218,9 @@ class Cronable
         $Response = \curl_exec($Request);
 
         /** Close the cURL session. */
-        \curl_close($Request);
+        if (\PHP_VERSION_ID < 80000) {
+            \curl_close($Request);
+        }
 
         /** Return the results of the request. */
         return $Response;
